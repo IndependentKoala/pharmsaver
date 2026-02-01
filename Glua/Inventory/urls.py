@@ -5,7 +5,8 @@ from .views import stockingListView, modifyDrugUpdateView
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
-    path('', views.dashboard, name='dashboard'),  # Redirect to dashboard by default after login
+    path('', views.landing_page, name='landing_page'),  # Landing page
+    path('dashboard/', views.dashboard, name='dashboard'),  # Dashboard
     path('create/', views.createDrug, name='create'),
     path('addstock/<int:pk>/', views.addStock, name='addstock'),
     path('stocking/', stockingListView.as_view(), name='stocking'),

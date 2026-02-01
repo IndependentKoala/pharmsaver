@@ -111,15 +111,28 @@
         gap: 15px;
     }
 
-    .pagination-section {
+    .pagination-wrapper {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         flex-wrap: wrap;
     }
 
-    .pagination-section .btn {
+    .show-entries {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .show-entries select {
+        padding: 6px 10px;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .pagination-btn {
         padding: 8px 12px;
         font-size: 13px;
         border-radius: 6px;
@@ -245,31 +258,45 @@
                 <i class="fas fa-arrow-left"></i> Back to Sales
             </a>
 
-            <div class="pagination-section" style="flex: 1; justify-content: center;">
-                {% if sales.has_previous %}
-                    <a href="?page={{ sales.previous_page_number }}&per_page={{ sales.paginator.per_page }}" class="btn btn-outline-secondary">
+            <div class="pagination-wrapper">
+                {% if sales.paginator.count > 10 %}
+                    <div class="show-entries">
+                        <label for="pagination-dropdown" class="mb-0">Show:</label>
+                        <select id="pagination-dropdown" onchange="location = this.value;">
+                            <option value="?per_page=10&page=1" {% if sales.paginator.per_page == 10 %}selected{% endif %}>10</option>
+                            <option value="?per_page=20&page=1" {% if sales.paginator.per_page == 20 %}selected{% endif %}>20</option>
+                            <option value="?per_page=50&page=1" {% if sales.paginator.per_page == 50 %}selected{% endif %}>50</option>
+                            <option value="?per_page=100&page=1" {% if sales.paginator.per_page == 100 %}selected{% endif %}>100</option>
+                        </select>
+                    </div>
+                {% endif %}
+
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+                    {% if sales.has_previous %}
+                    <a href="?page={{ sales.previous_page_number }}&per_page={{ sales.paginator.per_page }}" class="btn btn-outline-secondary pagination-btn">
                         <i class="fas fa-chevron-left"></i> Previous
                     </a>
-                {% endif %}
-
-                {% for page_num in sales.paginator.page_range %}
-                    {% if page_num == sales.number %}
-                        <span class="btn btn-primary" style="cursor: default;">{{ page_num }}</span>
-                    {% else %}
-                        <a href="?page={{ page_num }}&per_page={{ sales.paginator.per_page }}" class="btn btn-outline-secondary">{{ page_num }}</a>
                     {% endif %}
-                {% endfor %}
-
-                {% if sales.has_next %}
-                    <a href="?page={{ sales.next_page_number }}&per_page={{ sales.paginator.per_page }}" class="btn btn-outline-secondary">
+                    
+                    {% for page_num in sales.paginator.page_range %}
+                        {% if page_num == sales.number %}
+                            <span class="btn btn-primary pagination-btn" style="cursor: default;">{{ page_num }}</span>
+                        {% else %}
+                            <a href="?page={{ page_num }}&per_page={{ sales.paginator.per_page }}" class="btn btn-outline-secondary pagination-btn">{{ page_num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if sales.has_next %}
+                    <a href="?page={{ sales.next_page_number }}&per_page={{ sales.paginator.per_page }}" class="btn btn-outline-secondary pagination-btn">
                         Next <i class="fas fa-chevron-right"></i>
                     </a>
-                {% endif %}
-            </div>
+                    {% endif %}
+                </div>
 
-            <a href="{% url 'download_bin_report_excel' %}" id="download-btn" class="btn btn-primary">
-                <i class="fas fa-download"></i> Download Excel
-            </a>
+                <a href="{% url 'download_bin_report_excel' %}" id="download-btn" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-download"></i> Download
+                </a>
+            </div>
         </div>
     </div>
 </div>

@@ -26,6 +26,43 @@ import os
 
 # Create your views here.
 
+def landing_page(request):
+    """Landing page with branch selection cards"""
+    branches = [
+        {
+            'name': 'Pharmsave Ltd',
+            'url': 'https://www.pharmsaveltd.net/',
+            'icon': 'fa-pills',
+            'color': '#0056b3',
+            'description': 'Pharmaceutical Distribution'
+        },
+        {
+            'name': 'Status Animal Health',
+            'url': 'https://www.statusanimalhealthza.com/',
+            'icon': 'fa-vials',
+            'color': '#0066cc',
+            'description': 'Animal Health Products'
+        },
+        {
+            'name': 'Farmsave Stores',
+            'url': 'https://www.farmsavestores.com/',
+            'icon': 'fa-store',
+            'color': '#0066ff',
+            'description': 'Retail Distribution'
+        },
+        {
+            'name': 'Vetvac Ltd',
+            'url': 'https://www.vetvacltd.com/',
+            'icon': 'fa-vial',
+            'color': '#0077ff',
+            'description': 'Livestock Immunization'
+        }
+    ]
+    
+    context = {'branches': branches}
+    return render(request, 'Inventory/landing_page.html', context)
+
+
 @login_required
 def home(request):
     today = timezone.now().date()

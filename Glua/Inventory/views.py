@@ -28,13 +28,17 @@ import os
 
 def landing_page(request):
     """Landing page with branch selection cards"""
+    # Determine Pharmsave URL based on authentication
+    pharmsave_url = 'home' if request.user.is_authenticated else 'login'
+    
     branches = [
         {
             'name': 'Pharmsave Ltd',
-            'url': 'https://www.pharmsaveltd.net/',
+            'url': pharmsave_url,
             'icon': 'fa-pills',
             'color': '#0056b3',
-            'description': 'Pharmaceutical Distribution'
+            'description': 'Pharmaceutical Distribution',
+            'internal': True  # Mark as internal link
         },
         {
             'name': 'Status Animal Health',

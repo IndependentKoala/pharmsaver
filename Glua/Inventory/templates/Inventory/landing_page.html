@@ -369,7 +369,11 @@
         <!-- Cards Grid -->
         <div class="cards-grid">
             {% for branch in branches %}
-            <a href="{{ branch.url }}" target="_blank" rel="noopener noreferrer" class="branch-card {% if forloop.counter == 1 %}card-blue-dark{% elif forloop.counter == 2 %}card-blue-med{% elif forloop.counter == 3 %}card-blue-bright{% else %}card-blue-light{% endif %}" style="--card-color: {{ branch.color }};">
+            {% if branch.internal %}
+                <a href="{% url branch.url %}" class="branch-card {% if forloop.counter == 1 %}card-blue-dark{% elif forloop.counter == 2 %}card-blue-med{% elif forloop.counter == 3 %}card-blue-bright{% else %}card-blue-light{% endif %}" style="--card-color: {{ branch.color }};">
+            {% else %}
+                <a href="{{ branch.url }}" target="_blank" rel="noopener noreferrer" class="branch-card {% if forloop.counter == 1 %}card-blue-dark{% elif forloop.counter == 2 %}card-blue-med{% elif forloop.counter == 3 %}card-blue-bright{% else %}card-blue-light{% endif %}" style="--card-color: {{ branch.color }};">
+            {% endif %}
                 <div class="card-header">
                     <div class="card-icon">
                         <i class="fas {{ branch.icon }}"></i>

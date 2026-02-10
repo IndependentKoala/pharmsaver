@@ -135,6 +135,7 @@ class Sale(models.Model):
     drug_sold = models.CharField(max_length=200)
     date_sold = models.DateTimeField(auto_now_add=True)
     client = models.ForeignKey(Client, on_delete=models.PROTECT, null=True, blank=True)
+    legacy_client_name = models.CharField(max_length=200, null=True, blank=True, help_text="Legacy client name from old database")
     batch_no = models.CharField(max_length=200, null=True, blank=True)
     quantity = models.FloatField(null=True, blank=True)
     remaining_quantity = models.FloatField(null=True, blank=True)
@@ -149,6 +150,53 @@ class Sale(models.Model):
     #     buying = self.quantity * self.drug_sold.buying_price
     #     selling = self.quantity * self.sale_price
     #     return selling - buying
+
+    def get_client_display(self):
+        """Get client display, fetching from related sales or legacy data if current client is None"""
+        if self.client:
+            return self.client.name
+        
+        # Check if there's legacy client data
+        if self.legacy_client_name:
+            return self.legacy_client_name
+        
+        # Try to find client from other sales with same drug and batch
+        if self.batch_no:
+            similar_sale = Sale.objects.filter(
+                batch_no=self.batch_no,
+                client__isnull=False
+            ).first()
+            if similar_sale and similar_sale.client:
+                return similar_sale.client.name
+        
+        # Try to find legacy client from other sales with same drug and batch
+        if self.batch_no:
+            similar_sale = Sale.objects.filter(
+                batch_no=self.batch_no,
+                legacy_client_name__isnull=False
+            ).exclude(legacy_client_name='').first()
+            if similar_sale:
+                return similar_sale.legacy_client_name
+        
+        # Try to find client from other sales with same drug
+        if self.drug_sold:
+            similar_sale = Sale.objects.filter(
+                drug_sold=self.drug_sold,
+                client__isnull=False
+            ).first()
+            if similar_sale and similar_sale.client:
+                return similar_sale.client.name
+        
+        # Try to find legacy client from other sales with same drug
+        if self.drug_sold:
+            similar_sale = Sale.objects.filter(
+                drug_sold=self.drug_sold,
+                legacy_client_name__isnull=False
+            ).exclude(legacy_client_name='').first()
+            if similar_sale:
+                return similar_sale.legacy_client_name
+        
+        return 'None'
 
     class Meta:
         """Meta definition for Sale."""

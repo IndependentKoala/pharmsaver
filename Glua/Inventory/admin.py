@@ -3,9 +3,42 @@ from django.core.exceptions import PermissionDenied
 from .models import Drug, Sale, Stocked, Measurement, LockedProduct, MarketingItem, IssuedItem, PickingList, Cannister, IssuedCannister, Client
 
 
+class DrugAdmin(admin.ModelAdmin):
+    list_display = ('name', 'batch_no', 'stock', 'expiry_date', 'reorder_level')
+    search_fields = ('name', 'batch_no')
+    list_filter = ('expiry_date', 'stock')
+    ordering = ('name',)
+
+
+class SaleAdmin(admin.ModelAdmin):
+    list_display = ('drug_sold', 'client', 'seller', 'date_sold', 'quantity', 'batch_no')
+    search_fields = ('drug_sold', 'client__name', 'batch_no', 'legacy_client_name')
+    list_filter = ('date_sold', 'client')
+    readonly_fields = ('date_sold',)
+    ordering = ('-date_sold',)
+
+
+class StockedAdmin(admin.ModelAdmin):
+    list_display = ('drug_name', 'number_added', 'supplier', 'staff', 'date_added')
+    search_fields = ('drug_name__name', 'supplier')
+    list_filter = ('date_added', 'staff')
+    readonly_fields = ('date_added',)
+    ordering = ('-date_added',)
+
+
+class MeasurementAdmin(admin.ModelAdmin):
+    list_display = ('name', 'expiry_date')
+    search_fields = ('name',)
+    list_filter = ('expiry_date',)
+    ordering = ('name',)
+
+
 class LockedProductAdmin(admin.ModelAdmin):
-    # Optionally, add fields to the admin panel
     list_display = ('drug', 'locked_by', 'date_locked', 'quantity', 'client')
+    search_fields = ('drug__name', 'client__name')
+    list_filter = ('date_locked', 'locked_by', 'client')
+    readonly_fields = ('date_locked',)
+    ordering = ('-date_locked',)
 
     def save_model(self, request, obj, form, change):
         # Check if the object is being updated (change == True)
@@ -19,12 +52,59 @@ class LockedProductAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 
-admin.site.register(Drug)  # If you want to use the default admin for Drug
-admin.site.register(Sale)  # If you want to use the default admin for Sale
-admin.site.register(Client)  # Register Client model
-admin.site.register(MarketingItem)  # If you want to use the default admin for marketItem
-admin.site.register(IssuedItem)  # If you want to use the default admin for IssuedItem
+class MarketingItemAdmin(admin.ModelAdmin):
+    list_display = ('name', 'stock')
+    search_fields = ('name',)
+    list_filter = ('stock',)
+    ordering = ('name',)
+
+
+class IssuedItemAdmin(admin.ModelAdmin):
+    list_display = ('item', 'issued_to', 'quantity_issued', 'issued_by', 'date_issued')
+    search_fields = ('item', 'issued_to')
+    list_filter = ('date_issued', 'issued_by')
+    readonly_fields = ('date_issued',)
+    ordering = ('-date_issued',)
+
+
+class PickingListAdmin(admin.ModelAdmin):
+    list_display = ('date', 'client', 'product', 'batch_no', 'quantity')
+    search_fields = ('product', 'batch_no', 'client__name')
+    list_filter = ('date', 'client')
+    ordering = ('-date',)
+
+
+class CanisterAdmin(admin.ModelAdmin):
+    list_display = ('name', 'batch_no', 'stock', 'litres')
+    search_fields = ('name', 'batch_no')
+    list_filter = ('stock',)
+    ordering = ('name',)
+
+
+class IssuedCanisterAdmin(admin.ModelAdmin):
+    list_display = ('name', 'batch_no', 'client', 'staff_on_duty', 'date_issued', 'action')
+    search_fields = ('name', 'batch_no', 'client__name')
+    list_filter = ('date_issued', 'staff_on_duty', 'client', 'action')
+    readonly_fields = ('date_issued',)
+    ordering = ('-date_issued',)
+
+
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone', 'country_code', 'date_created')
+    search_fields = ('name', 'email', 'phone')
+    list_filter = ('country_code', 'date_created')
+    ordering = ('name',)
+
+
+# Register all models with their custom admin classes
+admin.site.register(Drug, DrugAdmin)
+admin.site.register(Sale, SaleAdmin)
+admin.site.register(Stocked, StockedAdmin)
+admin.site.register(Measurement, MeasurementAdmin)
 admin.site.register(LockedProduct, LockedProductAdmin)
-admin.site.register(PickingList)
-admin.site.register(Cannister)
-admin.site.register(IssuedCannister)
+admin.site.register(MarketingItem, MarketingItemAdmin)
+admin.site.register(IssuedItem, IssuedItemAdmin)
+admin.site.register(PickingList, PickingListAdmin)
+admin.site.register(Cannister, CanisterAdmin)
+admin.site.register(IssuedCannister, IssuedCanisterAdmin)
+admin.site.register(Client, ClientAdmin)

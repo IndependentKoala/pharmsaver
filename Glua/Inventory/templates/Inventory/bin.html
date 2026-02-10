@@ -232,7 +232,15 @@
                     {% for sale in sales %}
                     <tr>
                         <td>{{ sale.date_sold|date:"M d, Y" }}</td>
-                        <td>{{ sale.client }}</td>
+                        <td>
+                            {% if sale.client %}
+                                {{ sale.client.name }}
+                            {% elif sale.get_client_display != "None" %}
+                                {{ sale.get_client_display }}
+                            {% else %}
+                                None
+                            {% endif %}
+                        </td>
                         <td>{{ sale.seller.username }}</td>
                         <td>{{ sale.drug_sold }}</td>
                         <td>{{ sale.batch_no }}</td>

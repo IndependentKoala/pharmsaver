@@ -419,8 +419,17 @@ def download_bin_report_excel(request):
         # Start writing data from row 3 (after headers)
         row_num = 3
         for sale in sales:
+            # Get client name - prefer the ForeignKey client if available
+            client_name = ''
+            if sale.client:
+                client_name = sale.client.name
+            elif sale.legacy_client_name:
+                client_name = sale.legacy_client_name
+            else:
+                client_name = ''
+            
             ws.cell(row=row_num, column=1, value=sale.date_sold.strftime('%Y-%m-%d') if sale.date_sold else '')
-            ws.cell(row=row_num, column=2, value=sale.client.name if sale.client else '')
+            ws.cell(row=row_num, column=2, value=client_name)
             ws.cell(row=row_num, column=3, value=sale.drug_sold if sale.drug_sold else '')
             ws.cell(row=row_num, column=4, value=sale.batch_no if sale.batch_no else '')
             ws.cell(row=row_num, column=5, value=sale.quantity)

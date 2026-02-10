@@ -88,6 +88,26 @@
     .table-responsive {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* Improve scrollbar styling for mobile */
+    .table-responsive::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background: #555;
     }
 
     #drugs-table {
@@ -272,41 +292,238 @@
     @media (max-width: 768px) {
         .home-page-header {
             flex-direction: column;
-            align-items: flex-start;
+            align-items: stretch;
+            padding: 20px;
+            gap: 15px;
+        }
+
+        .header-title {
+            font-size: 20px;
+            width: 100%;
         }
 
         .search-form .input-group {
             max-width: 100%;
         }
 
+        .search-form .form-control,
+        .search-form .btn {
+            font-size: 13px;
+            padding: 8px 10px;
+        }
+
+        .table-section {
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .table-header {
+            padding: 15px;
+        }
+
+        .table-header h5 {
+            font-size: 16px;
+        }
+
+        #drugs-table {
+            font-size: 12px;
+        }
+
+        #drugs-table thead th {
+            padding: 8px 4px !important;
+            font-size: 11px !important;
+            word-wrap: break-word;
+        }
+
+        #drugs-table tbody td {
+            padding: 8px 4px !important;
+            font-size: 11px;
+            word-wrap: break-word;
+        }
+
+        /* Hide less important columns on very small screens */
+        @media (max-width: 576px) {
+            #drugs-table thead th:nth-child(2),
+            #drugs-table tbody td:nth-child(2) {
+                display: none; /* Hide Batch No */
+            }
+
+            #drugs-table thead th:nth-child(5),
+            #drugs-table tbody td:nth-child(5) {
+                display: none; /* Hide Dose Pack */
+            }
+
+            #drugs-table thead th:nth-child(6),
+            #drugs-table tbody td:nth-child(6) {
+                display: none; /* Hide Reorder Level */
+            }
+
+            #drugs-table thead th:nth-child(1) {
+                width: 30%;
+            }
+
+            #drugs-table thead th:nth-child(3) {
+                width: 15%;
+            }
+
+            #drugs-table thead th:nth-child(4) {
+                width: 20%;
+            }
+
+            #drugs-table thead th:nth-child(7) {
+                width: 25%;
+            }
+
+            #drugs-table thead th:nth-child(8),
+            #drugs-table tbody td:nth-child(8) {
+                display: none; /* Hide Quantity column */
+            }
+
+            #drugs-table thead th:nth-child(9) {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+
+            .action-buttons form {
+                width: 100%;
+            }
+
+            .action-buttons form:nth-child(1) .btn-action,
+            .action-buttons form:nth-child(2) .btn-action,
+            .action-buttons form:nth-child(3) .btn-action {
+                grid-column: 1;
+            }
+
+            .btn-action {
+                padding: 8px 10px;
+                font-size: 11px;
+                height: 36px;
+                gap: 4px;
+            }
+
+            .btn-action i {
+                font-size: 10px;
+            }
+        }
+
         .table-footer {
             flex-direction: column;
             gap: 15px;
+            padding: 15px;
         }
 
         .footer-buttons-group {
             flex-direction: column;
+            gap: 8px;
         }
 
         .footer-buttons-group .btn {
             width: 100%;
+            font-size: 12px;
+            padding: 10px 12px;
+        }
+
+        .footer-buttons-group .btn i {
+            font-size: 13px;
         }
 
         .action-buttons {
-            flex-direction: column;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
         }
 
         .btn-action {
             width: 100%;
+            font-size: 11px;
+            padding: 8px 8px;
+            height: 38px;
         }
 
         .pagination-wrapper {
             flex-direction: column;
             align-items: stretch;
+            gap: 10px;
+        }
+
+        .pagination-wrapper > div {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
         }
 
         .btn.pagination-btn {
             flex: 1;
+            min-width: 60px;
+            font-size: 11px;
+            padding: 8px 6px;
+        }
+
+        .show-entries {
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: center;
+        }
+
+        .show-entries label {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .show-entries select {
+            width: 100%;
+            font-size: 12px;
+        }
+
+        #download-btn {
+            width: 100%;
+            font-size: 12px;
+            padding: 10px 12px;
+        }
+    }
+
+    /* Additional improvements for tablets (768px to 992px) */
+    @media (min-width: 576px) and (max-width: 992px) {
+        #drugs-table {
+            font-size: 13px;
+        }
+
+        #drugs-table thead th,
+        #drugs-table tbody td {
+            padding: 10px 6px;
+            font-size: 12px;
+        }
+
+        .btn-action {
+            font-size: 12px;
+            padding: 8px 10px;
+            height: 38px;
+        }
+
+        .action-buttons {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .action-buttons form:nth-child(3) .btn-action {
+            grid-column: 1 / -1;
+        }
+    }
+
+    /* Container padding adjustments for mobile */
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding: 0 15px !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .container-fluid {
+            padding: 0 10px !important;
         }
     }
 </style>
